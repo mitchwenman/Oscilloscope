@@ -1,4 +1,10 @@
-int main()
+
+extern void setupADC(void);
+
+int main(void)
 {
-	return 0;
+	setupADC();
+	while (1) {;}
+
 }
+
