@@ -79,6 +79,7 @@ __heap_limit
 ;
 ;******************************************************************************
         EXPORT  __Vectors
+		IMPORT adcISR
 __Vectors
         DCD     StackMem + Stack            ; Top of Stack
         DCD     Reset_Handler               ; Reset Handler
@@ -110,7 +111,7 @@ __Vectors
         DCD     IntDefaultHandler           ; PWM Generator 1
         DCD     IntDefaultHandler           ; PWM Generator 2
         DCD     IntDefaultHandler           ; Quadrature Encoder 0
-        DCD     IntDefaultHandler           ; ADC Sequence 0
+        DCD     adcISR           ; ADC Sequence 0
         DCD     IntDefaultHandler           ; ADC Sequence 1
         DCD     IntDefaultHandler           ; ADC Sequence 2
         DCD     IntDefaultHandler           ; ADC Sequence 3
@@ -144,7 +145,7 @@ __Vectors
         DCD     IntDefaultHandler           ; PWM Generator 3
         DCD     IntDefaultHandler           ; uDMA Software Transfer
         DCD     IntDefaultHandler           ; uDMA Error
-        DCD     IntDefaultHandler           ; ADC1 Sequence 0
+        DCD     IntDefaultHandler          ; ADC1 Sequence 0
         DCD     IntDefaultHandler           ; ADC1 Sequence 1
         DCD     IntDefaultHandler           ; ADC1 Sequence 2
         DCD     IntDefaultHandler           ; ADC1 Sequence 3
