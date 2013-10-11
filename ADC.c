@@ -32,7 +32,7 @@ void setupADC(void)
 										//and first sample to generate interrupt
 	*ADCIM |= 0x1; //sampler 0 triggers interrupt
 	*ADCACTSS |= SAMPLER; //enable the sampler
-	*NVIC_EN0 |= 16384; //enable IRQ 30
+	*NVIC_EN0 |= 16384; //enable IRQ 14
 	
 	_enableADC();
 }

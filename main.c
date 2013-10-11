@@ -12,8 +12,10 @@ int main(void)
 	setupUART();
 	
 	while (1) {;}
-
+					
 }
+
+
 
 void adcISR(void)
 {
