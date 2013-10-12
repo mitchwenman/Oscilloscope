@@ -43,8 +43,10 @@ void _setupGPIO(void)
 
 void adcISR(void)
 {
+	char str[5];
 	int result = *ADCSSFIFO0;
 	*ADCISC |= 0x0F; //clear interrupt
+	sprintf(str, "%i", result);
 	drawValue(result);
 }
 

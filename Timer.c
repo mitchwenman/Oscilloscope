@@ -9,7 +9,7 @@ void setupTimer(void)
 	*GPTMCTL &= ~0x01; //disable timer
 	*GPTMCFG &= ~0x7; //set to 32bit mode
 	*GPTMTAMR |= 0x02; //set timer to periodic mode
-	*GPTMTAILR = 32000000; //set reload value
+	*GPTMTAILR = 160000; //set reload value
 	
 	*GPTMCTL |= 0x21; //enable timer and adc trigger
 	*RCGCTIMER |= 0x1; //startTimer

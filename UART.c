@@ -15,12 +15,15 @@ int xPos = 0;
 
 									/****** Constants ******/
 const int WIDTH = 50;
-const int HEIGHT = 50;
+const int HEIGHT = 20;
 const char ESC = 27;
+const int POINTFIVEVOLTS = 409;
+
 									/****** "Public" Methods ******/
 void drawValue(int value)
 {
 	_setCursorPosition(xPos, _calculateYPos(value));
+	printString(".");
 	xPos = (xPos + 1) % WIDTH; //start back at first row if at edge
 	if (xPos == 0)
 	{
@@ -63,7 +66,7 @@ void printString(char str[])
 								/****** "Private" Methods ******/
 int _calculateYPos(int y)
 {
-	return 80;
+	return HEIGHT - y * yScale/POINTFIVEVOLTS;
 }
 
 void _setCursorPosition(int x, int y)
