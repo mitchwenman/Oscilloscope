@@ -16,17 +16,18 @@ void setupTimer(void)
 	*GPTMCFG |= 0x4;
 	*GPTMTBMR |= 0x02; //set timer to periodic mode
 	*GPTMCTL |= 0x1000; //set timer b to trigger adc
-	setTimerReload(16000000);
-	*GPTMIMR |= 0x0100; //turn on timer interrupts
+	*GPTMTBILR = 16000000;
 	
-	
-	
-	*GPTMCTL |= 0x100;
-	*RCGCTIMER |= 0x01; //enable timer
+	*GPTMCTL |= 0x2100; //enable timer and adc trigger
+	*RCGCTIMER |= 0x01; //startTimer
 	
 }
 
+/*
+ * Stops timer, changes reload value, resets and restarts timer
+*/
 void setTimerReload(int reload)
 {
+	
 	*GPTMTBILR = reload;
 }
