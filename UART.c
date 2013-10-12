@@ -22,18 +22,18 @@ void setupUART(void)
 	UART0_CTRH_R |= 0x60;
 	UART0_CTL_R |= 0x301;
 		
-	//test UART
-	_outChar('t');
 }
 
 void printString(char str[])
 {
 	int i = 0;
+	//_outChar(13);
 	while (str[i] != '\0')
 	{
 		_outChar(str[i]);
 		++i;
 	}
+	
 }
 
 unsigned char getChar(void)

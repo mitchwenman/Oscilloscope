@@ -1,11 +1,13 @@
 #include "ADC.h"
 #include "GPIO.h"
 #include "NVIC.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 void setup(void);
 void _setupGPIO(void);
 void _enableADC(void);
+extern void printString(char str[]);
 
 void setupADC(void)
 {
@@ -35,6 +37,18 @@ void _setupGPIO(void)
 	*GPIOE_AFSEL |= 0x8; //set afsel for pin 3
 	*GPIOE_DEN &= ~0x8; //disable digital functions for pin 3
 	*GPIOE_AMSEL |= 0x8; //set analogue isolation for pin 3
+}
+
+void adcISR(void)
+{
+	*ADCISC |= 0x0F; //clear interrupt
+	printString("0");
+	/*
+	int result = *ADCSSFIFO0 & 0xFFF;
+	char str[10];
+	sprintf(str, "%d", result);
+	printString(str);
+	*/
 }
 
 void _enableADC(void)

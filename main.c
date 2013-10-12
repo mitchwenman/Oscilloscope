@@ -1,8 +1,7 @@
-
 extern void setupADC(void);
 extern void setupUART(void);
 extern void setupTimer(void);
-extern void printString(char str[]);
+
 
 
 int main(void)
@@ -17,8 +16,3 @@ int main(void)
 
 
 
-void adcISR(void)
-{
-	
-	printString("test");
-}

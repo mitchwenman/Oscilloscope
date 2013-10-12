@@ -5,15 +5,14 @@ void setTimerReload(int reload);
 
 void setupTimer(void) 
 {
-	*RCGCTIMER |= 0x1; //disable timer
-	*GPTMCTL &= ~0x0100;
-	*GPTMCFG |= 0x4;
-	*GPTMTBMR |= 0x02; //set timer to periodic mode
-	*GPTMCTL |= 0x1000; //set timer b to trigger adc
-	*GPTMTBILR = 16000000;
+	*RCGCTIMER |= 0x1; 
+	*GPTMCTL &= ~0x01; //disable timer
+	*GPTMCFG &= ~0x7; //set to 32bit mode
+	*GPTMTAMR |= 0x02; //set timer to periodic mode
+	*GPTMTAILR = 32000000; //set reload value
 	
-	*GPTMCTL |= 0x2100; //enable timer and adc trigger
-	*RCGCTIMER |= 0x01; //startTimer
+	*GPTMCTL |= 0x21; //enable timer and adc trigger
+	*RCGCTIMER |= 0x1; //startTimer
 	
 }
 
@@ -23,5 +22,5 @@ void setupTimer(void)
 void setTimerReload(int reload)
 {
 	
-	*GPTMTBILR = reload;
+	*GPTMTAILR = reload;
 }
