@@ -1,20 +1,28 @@
 #include "UART.h"
+#include "NVIC.h"
 #include <stdio.h>
 
 									/****** Method Declarations ******/
 void drawValue(int value);
 void setupUART(void);
 void printString(char str[]);
+void receiveISR(void);
 int _calculateYPos(int value);
 void _outChar(unsigned char c);
 void _setCursorPosition(int x, int y);
 void _clearWindow(void);
+void _increaseScale(void);
+void _decreaseScale(void);
+
+extern void increaseSampleRate(void);
+extern void decreaseSampleRate(void);
+
 									/****** Static variables *******/
 int yScale = 1;
 int xPos = 0;
 
 									/****** Constants ******/
-const int WIDTH = 50;
+const int WIDTH = 80;
 const int HEIGHT = 20;
 const char ESC = 27;
 const int POINTFIVEVOLTS = 409;
@@ -48,8 +56,23 @@ void setupUART(void)
 	UART0_IBRD_R = 0x8;
 	UART_FBRD_R = 0x2C;
 	UART0_CTRH_R |= 0x60;
+	UARTIM |= 0x10; //enable receive interrupt
+	*NVIC_EN0 |= 0x20; 
 	UART0_CTL_R |= 0x301;
 		
+}
+
+void receiveISR(void)
+{
+	char received = UART0_DR_R;
+	if (received == 'A')
+			_increaseScale();
+	else if (received == 'Z')
+			_decreaseScale();
+	else if (received == '>')
+		increaseSampleRate();
+	else if (received == '<')
+		decreaseSampleRate();
 }
 
 void printString(char str[])
@@ -90,3 +113,12 @@ void _outChar(unsigned char c)
 	UART0_DR_R = c;
 }
 
+void _increaseScale()
+{
+	
+}
+
+void _decreaseScale()
+{
+	
+}

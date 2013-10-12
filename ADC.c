@@ -5,9 +5,13 @@
 #include <stdlib.h>
 
 void setup(void);
+void increaseSampleRate(void);
+void decreaseSampleRate(void);
 void _setupGPIO(void);
 void _enableADC(void);
 float _convertToVolts(int adcReading);
+
+
 extern void printString(char str[]);
 extern void drawValue(int value);
 
@@ -28,6 +32,15 @@ void setupADC(void)
 	_enableADC();
 }
 
+void increaseSampleRate(void)
+{
+	
+}
+
+void decreaseSampleRate(void)
+{
+	
+}
 
 
 void _setupGPIO(void)

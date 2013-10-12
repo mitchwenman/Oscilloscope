@@ -9,4 +9,4 @@
 #define UART0_FR_R *(unsigned long*)0x4000c018
 #define UART0_DR_R *(unsigned long*)0x4000c000
 #define SYSCTL_RCGC2 *(unsigned long*) 0x400FE108
-
+#define UARTIM *(unsigned long*) 0x4000C038
