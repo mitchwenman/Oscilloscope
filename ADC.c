@@ -7,7 +7,9 @@
 void setup(void);
 void _setupGPIO(void);
 void _enableADC(void);
+float _convertToVolts(int adcReading);
 extern void printString(char str[]);
+extern void drawValue(int value);
 
 void setupADC(void)
 {
@@ -41,14 +43,14 @@ void _setupGPIO(void)
 
 void adcISR(void)
 {
+	int result = *ADCSSFIFO0;
 	*ADCISC |= 0x0F; //clear interrupt
-	printString("0");
-	/*
-	int result = *ADCSSFIFO0 & 0xFFF;
-	char str[10];
-	sprintf(str, "%d", result);
-	printString(str);
-	*/
+	drawValue(result);
+}
+
+float _convertToVolts(int adcReading)
+{
+	return ((float) adcReading)/4096 * 5;
 }
 
 void _enableADC(void)

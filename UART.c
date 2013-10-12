@@ -1,9 +1,34 @@
 #include "UART.h"
+#include <stdio.h>
 
+									/****** Method Declarations ******/
+void drawValue(int value);
 void setupUART(void);
-unsigned char getChar(void);
 void printString(char str[]);
+int _calculateYPos(int value);
 void _outChar(unsigned char c);
+void _setCursorPosition(int x, int y);
+void _clearWindow(void);
+									/****** Static variables *******/
+int yScale = 1;
+int xPos = 0;
+
+									/****** Constants ******/
+const int WIDTH = 50;
+const int HEIGHT = 50;
+const char ESC = 27;
+									/****** "Public" Methods ******/
+void drawValue(int value)
+{
+	_setCursorPosition(xPos, _calculateYPos(value));
+	xPos = (xPos + 1) % WIDTH; //start back at first row if at edge
+	if (xPos == 0)
+	{
+		_clearWindow();
+	}
+	
+}
+
 
 void setupUART(void)
 {
@@ -33,16 +58,26 @@ void printString(char str[])
 		_outChar(str[i]);
 		++i;
 	}
-	
 }
 
-unsigned char getChar(void)
+								/****** "Private" Methods ******/
+int _calculateYPos(int y)
 {
-	int i;
-	//While DR not full do nothing
-	while ((UART0_FR_R & 0x10) != 0) {;}
-	for (i =0; i < 3; i++) {;}
-	return UART0_DR_R; //return char in DR
+	return 80;
+}
+
+void _setCursorPosition(int x, int y)
+{
+	char str[6];
+	sprintf(str, "%c[%i;%if", ESC, y,x); //because the terminal is ass backward
+	printString(str);
+}
+
+void _clearWindow(void)
+{
+	char str[5];
+	sprintf(str, "%c[2J", ESC);
+	printString(str);
 }
 
 void _outChar(unsigned char c)

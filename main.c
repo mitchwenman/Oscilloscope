@@ -6,9 +6,9 @@ extern void setupTimer(void);
 
 int main(void)
 {
+	setupUART();
 	setupTimer();
 	setupADC();
-	setupUART();
 	
 	while (1) {;}
 					
