@@ -1,20 +1,7 @@
 #include "ADC.h"
+#include "GPIO.h"
+#include "NVIC.h"
 
-#define RCGCADC (unsigned long*) 0x400FE638
-#define ADCACTSS (unsigned long*) 0x40038000
-#define SAMPLER 0x01;
-#define ADCEMUX (unsigned long*) 0x40038014
-#define ADCSSMUX0 (unsigned long*) 0x40038040
-#define ADCSSCTL0 (unsigned long*) 0x40038044
-#define ADCIM (unsigned long*) 0x40038008
-
-#define NVIC_EN0 (unsigned long*) 0xE000E100
-
-
-#define RCGCGPIO (unsigned long*) 0x400FE608
-#define GPIOE_AFSEL (unsigned long*) 0x40024420
-#define GPIOE_DEN (unsigned long*) 0x4002451C
-#define GPIOE_AMSEL (unsigned long*) 0x40024528
 
 void setup(void);
 void _setupGPIO(void);
