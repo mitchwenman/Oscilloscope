@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 									/****** Method Declarations ******/
+void drawLoop(void);
 void drawValue(int value);
 void setupUART(void);
 void printString(char str[]);
@@ -14,6 +15,7 @@ void _clearWindow(void);
 void _increaseScale(void);
 void _decreaseScale(void);
 
+extern int dequeue(void);
 extern void increaseSampleRate(void);
 extern void decreaseSampleRate(void);
 
@@ -28,6 +30,18 @@ const char ESC = 27;
 const int POINTFIVEVOLTS = 409;
 
 									/****** "Public" Methods ******/
+void drawLoop(void)
+{
+	while (1)
+	{
+		int value = dequeue();
+		if (value != NULL)
+		{
+			drawValue(value);
+		}
+	}
+}
+
 void drawValue(int value)
 {
 	_setCursorPosition(xPos, _calculateYPos(value));
@@ -95,7 +109,7 @@ int _calculateYPos(int y)
 void _setCursorPosition(int x, int y)
 {
 	char str[6];
-	sprintf(str, "%c[%i;%if", ESC, y,x); //because the terminal is ass backward
+	sprintf(str, "%c[%i;%iH", ESC, y,x); //because the terminal is ass backward
 	printString(str);
 }
 

@@ -1,7 +1,7 @@
 extern void setupADC(void);
 extern void setupUART(void);
 extern void setupTimer(void);
-
+extern void drawLoop(void);
 
 
 int main(void)
@@ -10,7 +10,7 @@ int main(void)
 	setupTimer();
 	setupADC();
 	
-	while (1) {;}
+	drawLoop();
 					
 }
 

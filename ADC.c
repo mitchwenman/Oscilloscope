@@ -11,7 +11,7 @@ void _setupGPIO(void);
 void _enableADC(void);
 float _convertToVolts(int adcReading);
 
-
+extern void enqueue(int elem);
 extern void printString(char str[]);
 extern void drawValue(int value);
 
@@ -56,11 +56,10 @@ void _setupGPIO(void)
 
 void adcISR(void)
 {
-	char str[5];
 	int result = *ADCSSFIFO0;
 	*ADCISC |= 0x0F; //clear interrupt
-	sprintf(str, "%i", result);
-	drawValue(result);
+	enqueue(result);
+	free(&result);
 }
 
 float _convertToVolts(int adcReading)

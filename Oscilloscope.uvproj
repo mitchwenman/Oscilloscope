@@ -432,6 +432,11 @@
               <FileType>1</FileType>
               <FilePath>.\Timer.c</FilePath>
             </File>
+            <File>
+              <FileName>Queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Queue.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
