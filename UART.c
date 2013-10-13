@@ -20,7 +20,9 @@ extern void increaseSampleRate(void);
 extern void decreaseSampleRate(void);
 
 									/****** Static variables *******/
-int yScale = 1;
+float yScaleValues[] = {1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3};
+int yScale = 0;
+int xScale = 10;
 int xPos = 0;
 
 									/****** Constants ******/
@@ -28,6 +30,8 @@ const int WIDTH = 80;
 const int HEIGHT = 20;
 const char ESC = 27;
 const int POINTFIVEVOLTS = 409;
+const float MAXYSCALE = 9;
+const float MINYSCALE = 0;
 
 									/****** "Public" Methods ******/
 void drawLoop(void)
@@ -44,8 +48,12 @@ void drawLoop(void)
 
 void drawValue(int value)
 {
-	_setCursorPosition(xPos, _calculateYPos(value));
-	printString(".");
+	int y = _calculateYPos(value);
+	if (y > 0)
+	{
+		_setCursorPosition(xPos, y);
+		printString(".");
+	}
 	xPos = (xPos + 1) % WIDTH; //start back at first row if at edge
 	if (xPos == 0)
 	{
@@ -57,6 +65,7 @@ void drawValue(int value)
 
 void setupUART(void)
 {
+	
 	int i = 0;
 	SYSCTL_RCGUART_R |= 0x1;
 	for (i =0; i < 3; i++) {;}
@@ -103,7 +112,7 @@ void printString(char str[])
 								/****** "Private" Methods ******/
 int _calculateYPos(int y)
 {
-	return HEIGHT - y * yScale/POINTFIVEVOLTS;
+	return HEIGHT - y/POINTFIVEVOLTS * yScaleValues[yScale];
 }
 
 void _setCursorPosition(int x, int y)
@@ -127,12 +136,31 @@ void _outChar(unsigned char c)
 	UART0_DR_R = c;
 }
 
-void _increaseScale()
+void _printXScale(void)
 {
 	
 }
 
-void _decreaseScale()
+void _printYScale(void)
 {
 	
+}
+
+void _increaseScale()
+{
+	if (!(yScale == MAXYSCALE))
+	{
+		yScale++;
+		_clearWindow();
+	}
+}
+
+void _decreaseScale()
+{
+	if (!(yScale == MINYSCALE))
+		{
+		yScale--;
+		_clearWindow();
+	}
+		
 }

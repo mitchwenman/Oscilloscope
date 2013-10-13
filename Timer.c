@@ -1,7 +1,18 @@
 #include "Timer.h"
 
 void setupTimer(void);
-void setTimerReload(int reload);
+void _setTimerReload(int reload);
+
+									/****** Constants ******/
+const int MAXSAMPLERATE = 300;
+const int MINSAMPLERATE = 10;
+const int CYCLESPERSECOND = 16000000; //clock cycles persecond
+
+									/****** Static variables *******/
+static int sampleRate = 10;
+
+									/****** "Public" Methods ******/
+
 
 void setupTimer(void) 
 {
@@ -9,18 +20,37 @@ void setupTimer(void)
 	*GPTMCTL &= ~0x01; //disable timer
 	*GPTMCFG &= ~0x7; //set to 32bit mode
 	*GPTMTAMR |= 0x02; //set timer to periodic mode
-	*GPTMTAILR = 160000; //set reload value
+	*GPTMTAILR = CYCLESPERSECOND/sampleRate; //set reload value
 	
 	*GPTMCTL |= 0x21; //enable timer and adc trigger
 	*RCGCTIMER |= 0x1; //startTimer
 	
 }
 
+void increaseSampleRate(void)
+{
+	if (!(sampleRate == MAXSAMPLERATE))
+	{
+		sampleRate += 10;
+		_setTimerReload(CYCLESPERSECOND/sampleRate);
+	}
+}
+
+void decreaseSampleRate(void)
+{
+	if (!(sampleRate == MINSAMPLERATE))
+	{
+		sampleRate -= 10;
+		_setTimerReload(CYCLESPERSECOND/sampleRate);
+	}
+}
+
 /*
  * Stops timer, changes reload value, resets and restarts timer
 */
-void setTimerReload(int reload)
+void _setTimerReload(int reload)
 {
-	
+	*GPTMCTL &= ~0x01;
 	*GPTMTAILR = reload;
+	*GPTMCTL |= 0x01;
 }

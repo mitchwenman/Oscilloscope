@@ -4,16 +4,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+									/****** Method Declarations ******/
+
 void setup(void);
 void increaseSampleRate(void);
 void decreaseSampleRate(void);
 void _setupGPIO(void);
 void _enableADC(void);
-float _convertToVolts(int adcReading);
 
+extern void setTimerReload(int reload);
 extern void enqueue(int elem);
 extern void printString(char str[]);
-extern void drawValue(int value);
+
+
 
 void setupADC(void)
 {
@@ -32,14 +35,14 @@ void setupADC(void)
 	_enableADC();
 }
 
-void increaseSampleRate(void)
-{
-	
-}
 
-void decreaseSampleRate(void)
+
+void adcISR(void)
 {
-	
+	int result = *ADCSSFIFO0;
+	*ADCISC |= 0x0F; //clear interrupt
+	enqueue(result);
+	free(&result);
 }
 
 
@@ -54,18 +57,8 @@ void _setupGPIO(void)
 	*GPIOE_AMSEL |= 0x8; //set analogue isolation for pin 3
 }
 
-void adcISR(void)
-{
-	int result = *ADCSSFIFO0;
-	*ADCISC |= 0x0F; //clear interrupt
-	enqueue(result);
-	free(&result);
-}
 
-float _convertToVolts(int adcReading)
-{
-	return ((float) adcReading)/4096 * 5;
-}
+
 
 void _enableADC(void)
 {
