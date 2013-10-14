@@ -1,41 +1,50 @@
 #include "UART.h"
 #include "NVIC.h"
 #include <stdio.h>
-
+#include <stdlib.h>
 									/****** Method Declarations ******/
 void drawLoop(void);
 void drawValue(int value);
 void setupUART(void);
-void printString(char str[]);
+void _printStringAtPosition(char str[], int x, int y);
+void _printString(char str[]);
 void receiveISR(void);
 int _calculateYPos(int value);
 void _outChar(unsigned char c);
 void _setCursorPosition(int x, int y);
 void _clearWindow(void);
+void _printXScale(void);
+void _printYScale(void);
 void _increaseScale(void);
 void _decreaseScale(void);
 
 extern int dequeue(void);
 extern void increaseSampleRate(void);
 extern void decreaseSampleRate(void);
+extern int getSampleRate(void);
 
 									/****** Static variables *******/
-float yScaleValues[] = {1, 1.25, 1.5, 1.75, 2, 2.25, 2.5, 2.75, 3};
-int yScale = 0;
-int xScale = 10;
-int xPos = 0;
+float yScaleValues[] = {1, 2, 4, 8};
+int yScale = 2;
+int xPos = 4;
 
 									/****** Constants ******/
 const int WIDTH = 80;
 const int HEIGHT = 20;
 const char ESC = 27;
 const int POINTFIVEVOLTS = 409;
-const float MAXYSCALE = 9;
+const float MAXYSCALE = 3;
 const float MINYSCALE = 0;
+const int XINDENT = 4;
+const int YINDENT = 5;
+
+extern const int CYCLESPERSECOND;
 
 									/****** "Public" Methods ******/
 void drawLoop(void)
 {
+	_printXScale();
+	_printYScale();
 	while (1)
 	{
 		int value = dequeue();
@@ -43,6 +52,7 @@ void drawLoop(void)
 		{
 			drawValue(value);
 		}
+		free(&value);
 	}
 }
 
@@ -51,14 +61,17 @@ void drawValue(int value)
 	int y = _calculateYPos(value);
 	if (y > 0)
 	{
-		_setCursorPosition(xPos, y);
-		printString(".");
+		_printStringAtPosition(".", xPos, y);
 	}
 	xPos = (xPos + 1) % WIDTH; //start back at first row if at edge
 	if (xPos == 0)
 	{
 		_clearWindow();
+		xPos = XINDENT + 1;
+
 	}
+	free(&y);
+	
 	
 }
 
@@ -98,7 +111,17 @@ void receiveISR(void)
 		decreaseSampleRate();
 }
 
-void printString(char str[])
+
+
+								/****** "Private" Methods ******/
+void _printStringAtPosition(char str[], int x, int y)
+{
+	_setCursorPosition(x, y);
+	_printString(str);
+}
+
+
+void _printString(char str[])
 {
 	int i = 0;
 	//_outChar(13);
@@ -107,9 +130,9 @@ void printString(char str[])
 		_outChar(str[i]);
 		++i;
 	}
+	free(&i);
 }
 
-								/****** "Private" Methods ******/
 int _calculateYPos(int y)
 {
 	return HEIGHT - y/POINTFIVEVOLTS * yScaleValues[yScale];
@@ -118,15 +141,19 @@ int _calculateYPos(int y)
 void _setCursorPosition(int x, int y)
 {
 	char str[6];
-	sprintf(str, "%c[%i;%iH", ESC, y,x); //because the terminal is ass backward
-	printString(str);
+	sprintf(str, "%c[%i;%iH", ESC, y,x); //column;row
+	_printString(str);
+	free(str);
 }
 
 void _clearWindow(void)
 {
 	char str[5];
 	sprintf(str, "%c[2J", ESC);
-	printString(str);
+	_printString(str);
+	free(str);
+	_printXScale();
+	_printYScale();
 }
 
 void _outChar(unsigned char c)
@@ -143,6 +170,21 @@ void _printXScale(void)
 
 void _printYScale(void)
 {
+	int i;
+	char str[4];
+	int y;
+	for (i = YINDENT; i <= HEIGHT; i++)
+	{
+		_printStringAtPosition("-", XINDENT, i);
+	}
+	
+	for (i = 0; i <= 8; i++)
+	{
+		sprintf(str, "%iV", i);
+		y = _calculateYPos(POINTFIVEVOLTS * i * 2);
+		if (y < YINDENT) break; //gone higher than y label outline
+		_printStringAtPosition(str, XINDENT - 3, y);
+	}
 	
 }
 
@@ -158,7 +200,7 @@ void _increaseScale()
 void _decreaseScale()
 {
 	if (!(yScale == MINYSCALE))
-		{
+	{
 		yScale--;
 		_clearWindow();
 	}

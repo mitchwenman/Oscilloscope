@@ -7,13 +7,13 @@ int isFull(void);
 int isEmpty(void);
 
 					/****** Constants ******/
-const int SIZE = 64;
+const int SIZE = 64; //Power of 2 so an overflow won't break it
 
 
 					/****** Static variables ******/
 					
 int elements[SIZE];
-unsigned int head = 0;
+unsigned int head = 0; //unsigned so overflows to 0
 unsigned int tail = 0;
 
 					/****** Public Methods ******/

@@ -1,6 +1,7 @@
 #include "Timer.h"
 
 void setupTimer(void);
+int getSampleRate(void);
 void _setTimerReload(int reload);
 
 									/****** Constants ******/
@@ -25,6 +26,11 @@ void setupTimer(void)
 	*GPTMCTL |= 0x21; //enable timer and adc trigger
 	*RCGCTIMER |= 0x1; //startTimer
 	
+}
+
+int getSampleRate(void)
+{
+	return sampleRate;
 }
 
 void increaseSampleRate(void)
