@@ -19,16 +19,20 @@ void _printXScale(void);
 void _printYScale(void);
 void _increaseScale(void);
 void _decreaseScale(void);
+void _setColour(int colour);
+void _clearGraph(void);
+
 
 extern int dequeue(void);
 extern void increaseSampleRate(void);
 extern void decreaseSampleRate(void);
 extern int getSampleRate(void);
 
-									/****** Static variables *******/
+									/****** Variables *******/
 float yScaleValues[] = {1, 2, 4, 8};
 int yScale = 0;
-int xPos = 4;
+int xPos = 5;
+int colour = 0;
 
 									/****** Constants ******/
 const int WIDTH = 80;
@@ -65,10 +69,10 @@ void drawValue(int value)
 	{
 		_printStringAtPosition(".", xPos, y);
 	}
-	xPos = (xPos + 1) % WIDTH; //start back at first row if at edge
+	xPos = (xPos + 1) % (WIDTH - 4) ; //start back at first row if at edge
 	if (xPos == 0)
 	{
-		_clearWindow();
+		_clearGraph();
 		xPos = XINDENT + 1;
 
 	}
@@ -108,9 +112,20 @@ void receiveISR(void)
 	else if (received == 'Z')
 			_decreaseScale();
 	else if (received == '>')
+	{
 		increaseSampleRate();
+		_clearWindow();
+	}
 	else if (received == '<')
+	{
 		decreaseSampleRate();
+		_clearWindow();
+	}
+	else if (received == 'C')
+	{
+		colour++;
+		_setColour(colour);
+	}
 }
 
 
@@ -151,11 +166,14 @@ void _setCursorPosition(int x, int y)
 void _clearWindow(void)
 {
 	char str[5];
+	_setColour(0);
 	sprintf(str, "%c[2J", ESC);
 	_printString(str);
+	
 	free(str);
 	_printXScale();
 	_printYScale();
+	_setColour(colour);
 }
 
 void _outChar(unsigned char c)
@@ -175,7 +193,7 @@ void _printXScale(void)
 		_printStringAtPosition("|", i, HEIGHT + 1);
 	}
 	sprintf(str, "1/%is", getSampleRate());
-	_printStringAtPosition(str, WIDTH - 6, HEIGHT + 2);
+	_printStringAtPosition(str, (WIDTH - 6)/2, HEIGHT + 2);
 	
 }
 
@@ -219,4 +237,35 @@ void _decreaseScale()
 		_clearWindow();
 	}
 		
+}
+
+void _setColour(int colour)
+{
+	char str[5];
+	colour = colour % 4;
+	if (colour == 0)
+		sprintf(str, "%c[39m", ESC);
+	else if (colour == 1)
+		sprintf(str, "%c[31m", ESC);
+	else if (colour == 2)
+		sprintf(str, "%c[32m", ESC);
+	else if (colour == 3)
+		sprintf(str, "%c[34m", ESC);
+	
+	if (str[0] == ESC)
+		_printString(str);
+	
+	
+}
+
+void _clearGraph(void)
+{
+	int i;
+	char str[4];
+	sprintf(str, "%c[K", ESC);
+	for (i = YINDENT - 1; i <= HEIGHT; i++) //Print outline
+	{
+		_printStringAtPosition(str, XINDENT + 1, i);
+	}
+	
 }
