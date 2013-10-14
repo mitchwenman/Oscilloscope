@@ -9,6 +9,8 @@ void setupUART(void);
 void _printStringAtPosition(char str[], int x, int y);
 void _printString(char str[]);
 void receiveISR(void);
+
+
 int _calculateYPos(int value);
 void _outChar(unsigned char c);
 void _setCursorPosition(int x, int y);
@@ -25,7 +27,7 @@ extern int getSampleRate(void);
 
 									/****** Static variables *******/
 float yScaleValues[] = {1, 2, 4, 8};
-int yScale = 2;
+int yScale = 0;
 int xPos = 4;
 
 									/****** Constants ******/
@@ -165,6 +167,15 @@ void _outChar(unsigned char c)
 
 void _printXScale(void)
 {
+	int i;
+	char str[4];
+	for (i = XINDENT + 1; //so it doesn't overwrite y scale label
+				i < WIDTH - 4; i++)
+	{
+		_printStringAtPosition("|", i, HEIGHT + 1);
+	}
+	sprintf(str, "1/%is", getSampleRate());
+	_printStringAtPosition(str, WIDTH - 6, HEIGHT + 2);
 	
 }
 
@@ -173,18 +184,21 @@ void _printYScale(void)
 	int i;
 	char str[4];
 	int y;
-	for (i = YINDENT; i <= HEIGHT; i++)
+	for (i = YINDENT; i <= HEIGHT; i++) //Print outline
 	{
 		_printStringAtPosition("-", XINDENT, i);
 	}
 	
-	for (i = 0; i <= 8; i++)
+	for (i = 0; i <= 8; i++) //print scale values
 	{
 		sprintf(str, "%iV", i);
 		y = _calculateYPos(POINTFIVEVOLTS * i * 2);
 		if (y < YINDENT) break; //gone higher than y label outline
 		_printStringAtPosition(str, XINDENT - 3, y);
 	}
+	free(&i);
+	free(str);
+	free(&y);
 	
 }
 
