@@ -95,8 +95,11 @@ void setupUART(void)
 	GPIO_PORTA_AFSEL |= 0x03;
 	GPIO_PORTA_DEN_R |= 0x03;
 	GPIO_PORTA_PCTL_R |= 0x11;
-	UART0_IBRD_R = 0x8;
-	UART_FBRD_R = 0x2C;
+	//testing higher baudrates
+	UART0_IBRD_R = 0x1;	
+	UART_FBRD_R = 0x28;	
+	//UART0_IBRD_R = 0x8;
+	//UART_FBRD_R = 0x2C;
 	UART0_CTRH_R |= 0x60;
 	UARTIM |= 0x10; //enable receive interrupt
 	*NVIC_EN0 |= 0x20; 
