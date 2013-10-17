@@ -5,7 +5,7 @@ int getSampleRate(void);
 void _setTimerReload(int reload);
 
 									/****** Constants ******/
-const int MAXSAMPLERATE = 170;
+const int MAXSAMPLERATE = 400;
 const int MINSAMPLERATE = 10;
 const int CYCLESPERSECOND = 16000000; //clock cycles persecond
 

@@ -6,6 +6,7 @@ extern void drawLoop(void);
 
 int main(void)
 {
+	
 	setupUART();
 	setupTimer();
 	setupADC();

@@ -17,7 +17,6 @@ extern void enqueue(int elem);
 extern void printString(char str[]);
 
 
-
 void setupADC(void)
 {
 	*RCGCADC |= 0x01; //Activate clock to ADC0
@@ -42,6 +41,7 @@ void adcISR(void)
 	int result = *ADCSSFIFO0;
 	*ADCISC |= 0x0F; //clear interrupt
 	enqueue(result);
+	
 	free(&result);
 }
 

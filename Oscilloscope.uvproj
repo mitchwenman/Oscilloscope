@@ -437,11 +437,6 @@
               <FileType>1</FileType>
               <FilePath>.\Queue.c</FilePath>
             </File>
-            <File>
-              <FileName>Log.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Log.c</FilePath>
-            </File>
           </Files>
         </Group>
       </Groups>

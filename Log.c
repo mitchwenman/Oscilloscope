@@ -6,4 +6,21 @@ FILE *fp;
 
 
 void writeValue(int value);
-void init(void);
+void initLog(void);
+void close(void);
+
+void writeValue(int value)
+{
+	fprintf(fp, "%i\n", value);
+}
+
+
+void initLog(void)
+{
+	fp = fopen("Log.txt", "w");
+}
+
+void close(void)
+{
+	fclose(fp);
+}
