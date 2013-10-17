@@ -38,7 +38,7 @@ int colour = 0;
 const int WIDTH = 80;
 const int HEIGHT = 20;
 const char ESC = 27;
-const int POINTFIVEVOLTS = 409;
+const int POINTFIVEVOLTS = 558;
 const float MAXYSCALE = 3;
 const float MINYSCALE = 0;
 const int XINDENT = 4;
@@ -65,7 +65,7 @@ void drawLoop(void)
 void drawValue(int value)
 {
 	int y = _calculateYPos(value);
-	if (y > 0)
+	if (y > YINDENT)
 	{
 		_printStringAtPosition(".", xPos, y);
 	}
@@ -155,7 +155,8 @@ void _printString(char str[])
 
 int _calculateYPos(int y)
 {
-	return HEIGHT - y/POINTFIVEVOLTS * yScaleValues[yScale];
+	
+	return HEIGHT - y/(POINTFIVEVOLTS / yScaleValues[yScale]) + 1;
 }
 
 void _setCursorPosition(int x, int y)

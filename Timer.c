@@ -56,7 +56,6 @@ void decreaseSampleRate(void)
 */
 void _setTimerReload(int reload)
 {
-	*GPTMCTL &= ~0x01;
 	*GPTMTAILR = reload;
-	*GPTMCTL |= 0x01;
+	
 }
