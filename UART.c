@@ -21,7 +21,7 @@ void _increaseScale(void);
 void _decreaseScale(void);
 void _setColour(int colour);
 void _clearGraph(void);
-
+void _printXScaleLabel(void);
 
 extern int dequeue(void);
 extern void increaseSampleRate(void);
@@ -117,12 +117,15 @@ void receiveISR(void)
 	else if (received == '>')
 	{
 		increaseSampleRate();
-		_clearWindow();
+		_clearGraph();
+		_printXScaleLabel();
 	}
 	else if (received == '<')
 	{
 		decreaseSampleRate();
-		_clearWindow();
+		_clearGraph();
+		_printXScaleLabel();
+
 	}
 	else if (received == 'C')
 	{
@@ -199,6 +202,17 @@ void _printXScale(void)
 	sprintf(str, "1/%is", getSampleRate());
 	_printStringAtPosition(str, (WIDTH - 6)/2, HEIGHT + 2);
 	
+}
+
+void _printXScaleLabel(void)
+{
+	char clrStr[5];
+	char str[4];
+	sprintf(clrStr, "%c[K", ESC);
+	sprintf(str, "1/%is", getSampleRate());
+	_printStringAtPosition(clrStr, 0, HEIGHT + 2);
+	_printStringAtPosition(str, (WIDTH-6)/2, HEIGHT + 2);
+	free(str);
 }
 
 void _printYScale(void)

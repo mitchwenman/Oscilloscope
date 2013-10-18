@@ -24,7 +24,7 @@ void setupTimer(void)
 	*GPTMTAILR = CYCLESPERSECOND/sampleRate; //set reload value
 	
 	*GPTMCTL |= 0x21; //enable timer and adc trigger
-	*RCGCTIMER |= 0x1; //startTimer
+	
 	
 }
 

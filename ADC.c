@@ -42,7 +42,7 @@ void adcISR(void)
 	*ADCISC |= 0x0F; //clear interrupt
 	enqueue(result);
 	
-	free(&result);
+	
 }
 
 
