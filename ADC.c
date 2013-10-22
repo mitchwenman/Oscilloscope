@@ -16,7 +16,7 @@ extern void setTimerReload(int reload);
 extern void enqueue(int elem);
 extern void printString(char str[]);
 
-
+//Configures the ADC - PE3, Sampler 0, ADC0
 void setupADC(void)
 {
 	*RCGCADC |= 0x01; //Activate clock to ADC0
@@ -28,14 +28,15 @@ void setupADC(void)
 	*ADCSSCTL0 |= 0x6;//Sets first sample in sequence to be end of sequence
 										//and first sample to generate interrupt
 	*ADCIM |= 0x1; //sampler 0 triggers interrupt
-	*ADCACTSS |= SAMPLER; //enable the sampler
+	
 	*NVIC_EN0 |= 16384; //enable IRQ 14
 	
 	_enableADC();
 }
 
 
-
+//Retrieves the converted value from the ADC FIFO
+//and puts it in the buffer.
 void adcISR(void)
 {
 	int result = *ADCSSFIFO0;
@@ -45,7 +46,7 @@ void adcISR(void)
 	
 }
 
-
+//Sets up the GPIO port for voltage input
 void _setupGPIO(void)
 {
 	int i;
@@ -59,7 +60,7 @@ void _setupGPIO(void)
 
 
 
-
+//enables the adc
 void _enableADC(void)
 {
 	*ADCACTSS |= 0x01;

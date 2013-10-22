@@ -29,24 +29,28 @@ extern void decreaseSampleRate(void);
 extern int getSampleRate(void);
 
 									/****** Variables *******/
-float yScaleValues[] = {1, 2, 4, 8};
-int yScale = 0;
+float yScaleValues[] = {1, 2, 4, 8}; //An array of float scale values
+																		//accessed using yScaleValues[yScale]
+int yScale = 0; //The current element in yScaleValues[] being used for the scale
 int xPos = 5;
 int colour = 0;
 
 									/****** Constants ******/
-const int WIDTH = 80;
-const int HEIGHT = 20;
-const char ESC = 27;
-const int POINTFIVEVOLTS = 625;
-const float MAXYSCALE = 3;
-const float MINYSCALE = 0;
-const int XINDENT = 4;
-const int YINDENT = 5;
+const int WIDTH = 80; //The width of the graph
+const int HEIGHT = 20; //The height of the graph
+const char ESC = 27; //ASCII for ESC
+const int POINTFIVEVOLTS = 625; //Amount of ADC converted units per .5V
+const float MAXYSCALE = 3; //Max y scale
+const float MINYSCALE = 0; //Min y scale 
+const int XINDENT = 4; //X axis indent from left of window to graph
+const int YINDENT = 5; //Y indent from top of screent o graph
 
-extern const int CYCLESPERSECOND;
+extern const int CYCLESPERSECOND; //The number of clock cycles per second.
 
 									/****** "Public" Methods ******/
+
+//The loop that runs constantly, accessing the buffer
+//and drawing the result.
 void drawLoop(void)
 {
 	_printXScale();
@@ -62,6 +66,8 @@ void drawLoop(void)
 	}
 }
 
+//Given an ADC converted value
+//plots it on the graph.
 void drawValue(int value)
 {
 	int y = _calculateYPos(value);
@@ -81,7 +87,7 @@ void drawValue(int value)
 	
 }
 
-
+//Initialises the UART
 void setupUART(void)
 {
 	
@@ -107,6 +113,8 @@ void setupUART(void)
 		
 }
 
+//The ISR called when the UART receive FIFO
+// is full.
 void receiveISR(void)
 {
 	char received = UART0_DR_R;
@@ -137,13 +145,15 @@ void receiveISR(void)
 
 
 								/****** "Private" Methods ******/
+
+//Prints a string at an X and Y coordinate
 void _printStringAtPosition(char str[], int x, int y)
 {
 	_setCursorPosition(x, y);
 	_printString(str);
 }
 
-
+//Prints a string of characters to the terminal
 void _printString(char str[])
 {
 	int i = 0;
@@ -156,12 +166,14 @@ void _printString(char str[])
 	free(&i);
 }
 
+//Given an ADC value calculates the position on the Y axis.
 int _calculateYPos(int y)
 {
 	
 	return HEIGHT - y/(POINTFIVEVOLTS / yScaleValues[yScale]) + 1;
 }
 
+//Sets the terminal's curson position to a coordinate
 void _setCursorPosition(int x, int y)
 {
 	char str[6];
@@ -170,6 +182,7 @@ void _setCursorPosition(int x, int y)
 	free(str);
 }
 
+//Clears the window and redraws the x and y scale labels
 void _clearWindow(void)
 {
 	char str[5];
@@ -183,6 +196,7 @@ void _clearWindow(void)
 	_setColour(colour);
 }
 
+//Outputs a character to the terminal
 void _outChar(unsigned char c)
 {
 	//while tx reg full wait
@@ -190,6 +204,7 @@ void _outChar(unsigned char c)
 	UART0_DR_R = c;
 }
 
+//Prints the x scale on the graph
 void _printXScale(void)
 {
 	int i;
@@ -204,17 +219,20 @@ void _printXScale(void)
 	
 }
 
+//Prints the time/div to the x label
 void _printXScaleLabel(void)
 {
 	char clrStr[5];
-	char str[4];
+	char str[6];
 	sprintf(clrStr, "%c[K", ESC);
 	sprintf(str, "1/%is", getSampleRate());
 	_printStringAtPosition(clrStr, 0, HEIGHT + 2);
 	_printStringAtPosition(str, (WIDTH-6)/2, HEIGHT + 2);
 	free(str);
+	free(clrStr);
 }
 
+//Prints the y scale on the graph
 void _printYScale(void)
 {
 	int i;
@@ -238,6 +256,7 @@ void _printYScale(void)
 	
 }
 
+//Increases the y scale
 void _increaseScale()
 {
 	if (!(yScale == MAXYSCALE))
@@ -247,6 +266,7 @@ void _increaseScale()
 	}
 }
 
+//Decreases the Y scale
 void _decreaseScale()
 {
 	if (!(yScale == MINYSCALE))
@@ -257,6 +277,7 @@ void _decreaseScale()
 		
 }
 
+//Sets the foreground colour of the terminal
 void _setColour(int colour)
 {
 	char str[5];
@@ -276,6 +297,7 @@ void _setColour(int colour)
 	
 }
 
+//Clears only the drawn graph, leaving the scales.
 void _clearGraph(void)
 {
 	int i;
@@ -285,5 +307,4 @@ void _clearGraph(void)
 	{
 		_printStringAtPosition(str, XINDENT + 1, i);
 	}
-	
 }

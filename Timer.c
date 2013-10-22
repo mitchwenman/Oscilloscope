@@ -5,16 +5,16 @@ int getSampleRate(void);
 void _setTimerReload(int reload);
 
 									/****** Constants ******/
-const int MAXSAMPLERATE = 400;
-const int MINSAMPLERATE = 10;
+const int MAXSAMPLERATE = 400; //Max samples per second
+const int MINSAMPLERATE = 10; //Min samples per second
 const int CYCLESPERSECOND = 16000000; //clock cycles persecond
 
 									/****** Static variables *******/
-static int sampleRate = 10;
+static int sampleRate = 10; //The current sample rate
 
 									/****** "Public" Methods ******/
 
-
+//Configures the timer - Period mode, 10Hz
 void setupTimer(void) 
 {
 	*RCGCTIMER |= 0x1; 
@@ -28,11 +28,13 @@ void setupTimer(void)
 	
 }
 
+//Returns the current sample rate
 int getSampleRate(void)
 {
 	return sampleRate;
 }
 
+//Increments the sample rate by 10
 void increaseSampleRate(void)
 {
 	if (!(sampleRate == MAXSAMPLERATE))
@@ -42,6 +44,7 @@ void increaseSampleRate(void)
 	}
 }
 
+//Decrements the sample rate by 10
 void decreaseSampleRate(void)
 {
 	if (!(sampleRate == MINSAMPLERATE))
@@ -52,10 +55,11 @@ void decreaseSampleRate(void)
 }
 
 /*
- * Stops timer, changes reload value, resets and restarts timer
+ * Changes the reload value of the timer
 */
 void _setTimerReload(int reload)
 {
 	*GPTMTAILR = reload;
 	
 }
+
